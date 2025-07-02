@@ -1,0 +1,461 @@
+{% extends "main/base.html" %}
+
+{% block title %}Query Database - NL2SQL SaaS{% endblock %}
+
+{% block content %}
+<style>
+/* Modern Query Page Styles */
+
+.hero-section {
+    background: linear-gradient(135deg, #f8f9ff 0%, #e9ecef 100%);
+    border-radius: 20px;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.08);
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23667eea' fill-opacity='0.07'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    animation: float 20s infinite linear;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-icon {
+    font-size: 1.5rem;
+    color: #667eea;
+    margin-right: 0.5rem;
+}
+
+.hero-section h1 {
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.hero-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.db-badge {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+}
+
+.modern-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.card-header-modern {
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+    text-align: center;
+    position: relative;
+}
+
+.card-header-modern h2 {
+    color: #333;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.query-form-container {
+    padding: 2.5rem;
+}
+
+.form-group-modern {
+    margin-bottom: 2rem;
+}
+
+.form-label-modern {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.query-textarea {
+    width: 100%;
+    padding: 1.5rem;
+    border: 2px solid #e9ecef;
+    border-radius: 16px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8f9ff;
+    outline: none;
+    box-shadow: 0 4px 10px rgba(102, 126, 234, 0.05);
+    resize: vertical;
+    min-height: 120px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.query-textarea:focus {
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+    transform: translateY(-2px);
+}
+
+.query-textarea::placeholder {
+    color: #adb5bd;
+    font-style: italic;
+}
+
+.submit-button {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: block;
+    padding: 1.3rem 2.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 16px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.submit-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.submit-button:hover::before {
+    left: 100%;
+}
+
+.submit-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+}
+
+.submit-button i {
+    margin-right: 0.5rem;
+}
+
+.result-section {
+    margin-top: 2rem;
+}
+
+.result-header {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    padding: 1.5rem 2rem;
+    border-radius: 16px 16px 0 0;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.result-header h3 {
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sql-display {
+    background: #1e1e1e;
+    color: #fff;
+    padding: 2rem;
+    border-radius: 0 0 16px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    position: relative;
+}
+
+.table-container-modern {
+    background: white;
+    border-radius: 0 0 16px 16px;
+    overflow: hidden;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.modern-table th {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.modern-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    color: #333;
+}
+
+.modern-table tr:hover {
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.result-info {
+    background: rgba(102, 126, 234, 0.05);
+    padding: 1rem 2rem;
+    border-radius: 0 0 16px 16px;
+    text-align: center;
+    color: #666;
+    font-weight: 500;
+}
+
+.success-message {
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(56, 193, 114, 0.05));
+    border: 1px solid rgba(40, 167, 69, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #28a745;
+    font-weight: 600;
+}
+
+.success-icon {
+    font-size: 1.5rem;
+    color: #28a745;
+}
+
+.error-message {
+    margin-bottom: 1rem;
+    color: #b91c1c;
+    background: #fee2e2;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.back-btn {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.back-btn:hover {
+    background: rgba(102, 126, 234, 0.15);
+    color: #667eea;
+    transform: translateX(-2px);
+}
+
+.back-btn i {
+    font-size: 0.8rem;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@media (max-width: 768px) {
+    .query-form-container {
+        padding: 2rem 1.5rem;
+    }
+    
+    .hero-section {
+        padding: 1.25rem 1.5rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 1.3rem;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .hero-title {
+        justify-content: center;
+    }
+}
+</style>
+
+<div class="query-container">
+    <!-- Query Form -->
+    <div class="modern-card">
+        <div class="card-header-modern">
+            <div style="position: absolute; top: 1rem; left: 1rem;">
+                <a href="{% url 'dashboard' %}" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+            <h2>
+                <i class="fas fa-brain" style="color: #667eea; margin-right: 0.5rem;"></i>
+                Ask Your Data
+                <span class="db-badge" style="margin-left: 0.75rem;">
+                    {% if db_conn.db_type == 'postgresql' %}
+                        <i class="fas fa-elephant"></i>
+                    {% elif db_conn.db_type == 'mysql' %}
+                        <i class="fas fa-dolphin"></i>
+                    {% else %}
+                        <i class="fas fa-database"></i>
+                    {% endif %}
+                    {{ db_conn.db_type|upper }} - {{ db_conn.db_name }}
+                </span>
+            </h2>
+            <p>Describe what you want to know and let AI generate the perfect SQL query</p>
+        </div>
+        
+        <div class="query-form-container">
+            <!-- Error Message Display -->
+            {% if error_message %}
+                <div class="error-message" style="margin-bottom: 1rem; color: #b91c1c; background: #fee2e2; padding: 1rem; border-radius: 8px;">
+                    {{ error_message|safe }}
+                </div>
+            {% endif %}
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group-modern">
+                    <label class="form-label-modern">
+                        <i class="fas fa-comment-dots"></i>
+                        Your Question
+                    </label>
+                    <textarea name="nl_query" class="query-textarea" 
+                              placeholder="Ask me anything about your data... e.g., 'Show me all customers from California' or 'What are the top 5 selling products?'"
+                              required>{{ form.nl_query.value|default:'' }}</textarea>
+                </div>
+                
+                <button type="submit" class="submit-button">
+                    <i class="fas fa-rocket"></i> Generate & Execute SQL
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SQL Query Display -->
+    {% if sql_query %}
+        <div class="modern-card result-section">
+            <div class="result-header">
+                <h3><i class="fas fa-code"></i> Generated SQL Query</h3>
+            </div>
+            <div class="sql-display">{{ sql_query }}</div>
+        </div>
+    {% endif %}
+
+    <!-- Results Display -->
+    {% if result %}
+        <div class="modern-card result-section">
+            <div class="result-header">
+                <h3><i class="fas fa-table"></i> Query Results</h3>
+            </div>
+            {% if result.rows %}
+                <div class="table-container-modern">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                {% for col in result.columns %}
+                                    <th>{{ col }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in result.rows %}
+                                <tr>
+                                    {% for val in row %}
+                                        <td>{{ val|default:"NULL" }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="result-info">
+                    <i class="fas fa-info-circle"></i> 
+                    Showing {{ result.rows|length }} result{{ result.rows|length|pluralize }}
+                </div>
+            {% else %}
+                <div style="padding: 2rem;">
+                    <div class="success-message">
+                        <i class="fas fa-check-circle success-icon"></i>
+                        <div>
+                            <strong>Query executed successfully!</strong>
+                            {% if result %}
+                                <div style="margin-top: 1rem; padding: 1rem; background: #1e1e1e; color: white; border-radius: 8px; font-family: monospace;">
+                                    {{ result }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

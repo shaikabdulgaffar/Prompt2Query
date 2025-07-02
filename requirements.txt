@@ -1,0 +1,7 @@
+Django>=4.2
+psycopg2-binary
+mysqlclient
+python-dotenv
+requests
+langchain
+google-generativeai

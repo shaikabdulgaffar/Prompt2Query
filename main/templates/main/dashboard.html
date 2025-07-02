@@ -1,0 +1,395 @@
+{% extends "main/base.html" %}
+
+{% block title %}Dashboard - NL2SQL SaaS{% endblock %}
+
+{% block content %}
+<!-- Main Content -->
+<div class="modern-card">
+    <div class="card-header-modern">
+        <div class="header-content">
+            <h2><i class="fas fa-rocket"></i> Your Database Ecosystem</h2>
+            <p>Manage and interact with your connected databases using AI</p>
+        </div>
+        <button class="btn-modern btn-primary" onclick="location.href='{% url 'db_connect' %}'">
+            <i class="fas fa-plus"></i>
+            <span>Connect New Database</span>
+        </button>
+    </div>
+    
+    {% if dbs %}
+        <div class="database-grid">
+            {% for db in dbs %}
+                <div class="database-card">
+                    <div class="db-card-header">
+                        <div class="db-type-badge {{ db.db_type|lower }}">
+                            {% if db.db_type == 'postgresql' %}
+                                <i class="fas fa-elephant"></i>
+                            {% elif db.db_type == 'mysql' %}
+                                <i class="fas fa-dolphin"></i>
+                            {% else %}
+                                <i class="fas fa-database"></i>
+                            {% endif %}
+                            {{ db.db_type|upper }}
+                        </div>
+                        <div class="db-status">
+                            <span class="status-dot active"></span>
+                            <span>Connected</span>
+                        </div>
+                    </div>
+                    
+                    <div class="db-card-content">
+                        <h3>{{ db.db_name }}</h3>
+                        <p class="db-host">{{ db.host }}:{{ db.port }}</p>
+                        <p class="db-date">
+                            <i class="fas fa-calendar-plus"></i>
+                            Connected {{ db.created_at|timesince }} ago
+                        </p>
+                    </div>
+                    
+                    <div class="db-card-actions">
+                        <a href="{% url 'query' db.id %}" class="action-btn primary">
+                            <i class="fas fa-magic"></i>
+                            <span>Query AI</span>
+                        </a>
+                        <a href="{% url 'history' db.id %}" class="action-btn secondary">
+                            <i class="fas fa-history"></i>
+                            <span>History</span>
+                        </a>
+                        <a href="{% url 'db_overview' db.id %}" class="action-btn info">
+                            <i class="fas fa-eye"></i>
+                            <span>Overview</span>
+                        </a>
+                        <form method="post" action="{% url 'db_delete' db.id %}" style="flex: 1; display: flex;">
+                            {% csrf_token %}
+                            <button type="submit" class="action-btn danger" onclick="return confirm('Remove this database?');" style="width: 100%;">
+                                <i class="fas fa-trash-alt"></i>
+                                <span>Remove</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state-modern">
+            <div class="empty-animation">
+                <div class="floating-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="connection-lines">
+                    <div class="line line-1"></div>
+                    <div class="line line-2"></div>
+                    <div class="line line-3"></div>
+                </div>
+            </div>
+            <h3>Ready to Connect Your First Database?</h3>
+            <p>Start your journey with AI-powered SQL generation by connecting to any database</p>
+            <button class="btn-modern btn-gradient" onclick="location.href='{% url 'db_connect' %}'">
+                <i class="fas fa-rocket"></i>
+                <span>Get Started</span>
+            </button>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+/* Modern Dashboard Styles */
+.hero-section {
+    background: linear-gradient(135deg, #f8f9ff 0%, #e9ecef 100%);
+    border-radius: 24px;
+    padding: 3rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.10);
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23667eea' fill-opacity='0.07'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    animation: float 20s infinite linear;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-icon {
+    font-size: 4rem;
+    color: #667eea;
+    margin-bottom: 1rem;
+    animation: pulse 2s infinite;
+}
+
+.hero-section h1 {
+    color: #333;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 10px rgba(102,126,234,0.08);
+}
+
+.hero-section p {
+    color: #666;
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.modern-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    overflow: hidden;
+}
+
+.card-header-modern {
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.header-content h2 {
+    color: #333;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.header-content p {
+    color: #666;
+    margin: 0;
+}
+
+.btn-modern {
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-modern:hover::before {
+    left: 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.btn-gradient {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: white;
+}
+
+.btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.database-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.database-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.database-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+}
+
+.db-card-header {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f8f9ff, #f0f2ff);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.db-type-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.db-type-badge.postgresql {
+    background: linear-gradient(135deg, #336791, #4a90a4);
+    color: white;
+}
+
+.db-type-badge.mysql {
+    background: linear-gradient(135deg, #f29111, #f2b705);
+    color: white;
+}
+
+.db-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #28a745;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #28a745;
+    animation: pulse 2s infinite;
+}
+
+.db-card-content {
+    padding: 1.5rem;
+}
+
+.db-card-content h3 {
+    color: #333;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.db-host {
+    color: #666;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.db-date {
+    color: #999;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.db-card-actions {
+    padding: 1.5rem;
+    background: #fafbff;
+    display: flex;
+    gap: 0.5rem; /* Smaller gap for single row */
+}
+
+.action-btn {
+    flex: 1;
+    padding: 0.75rem 0.5rem; /* Consistent padding */
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.8rem; /* Smaller font for better fit */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem; /* Smaller gap between icon and text */
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 44px; /* Fixed height for all buttons */
+    min-width: 0; /* Allow flex items to shrink */
+}
+
+.action-btn span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Keep your existing action-btn colors */
+.action-btn.primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.action-btn.secondary {
+    background: #f8f9fa;
+    color: #667eea;
+    border: 2px solid #e9ecef;
+}
+
+.action-btn.info {
+    background: #f8f9fa;
+    color: #17a2b8;
+    border: 2px solid #e9ecef;
+}
+
+.action-btn.danger {
+    background: linear-gradient(135deg, #ff5858, #f09819);
+    color: white;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .db-card-actions {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .action-btn {
+        flex: 1 1 calc(50% - 0.25rem); /* 2 buttons per row on mobile */
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .db-card-actions {
+        flex-direction: column;
+    }
+    
+    .action-btn {
+        flex: none;
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
