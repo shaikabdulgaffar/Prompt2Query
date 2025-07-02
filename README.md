@@ -1,6 +1,6 @@
 # Prompt2Query (NL2SQL SaaS)
 
-Prompt2Query is a modern SaaS web application that empowers non-technical users to interact with their databases using natural language. Users can connect their own databases (PostgreSQL, MySQL, SQLite), ask questions in plain English, and get instant SQL queries and results—no SQL knowledge required!
+Prompt2Query is a modern SaaS web application that empowers non-technical users to interact with their databases using natural language. Users can connect their own databases (PostgreSQL, MySQL), ask questions in plain English, and get instant SQL queries and results—no SQL knowledge required!
 
 ---
 
@@ -27,19 +27,25 @@ Prompt2Query is a modern SaaS web application that empowers non-technical users 
 
 ### Dashboard
 
-![Dashboard Screenshot](screenshots/dashboard.png)
+![Screenshot 2025-07-02 124210](https://github.com/user-attachments/assets/47bafd59-d470-4247-97a7-a6c9ed8e374c)
+
 
 ### Query with AI
 
-![Query Page Screenshot](screenshots/query.png)
+![Screenshot 2025-07-02 124242](https://github.com/user-attachments/assets/df47e630-05d2-439b-949d-15d69411f950)
+
+![Screenshot 2025-07-02 124445](https://github.com/user-attachments/assets/62c22891-c5ea-441d-9c7e-f004ba2fb709)
+
 
 ### Query History
 
-![History Screenshot](screenshots/history.png)
+![Screenshot 2025-07-02 124500](https://github.com/user-attachments/assets/41b4ad3b-a90a-4a4d-8247-ead25b5dac09)
 
 ### Database Overview
 
-![Overview Screenshot](screenshots/overview.png)
+![Screenshot 2025-07-02 124524](https://github.com/user-attachments/assets/55d18670-c585-4b6b-a1ad-734ea3ec3215)
+
+![Screenshot 2025-07-02 124228](https://github.com/user-attachments/assets/de2fc526-ab24-4e38-8619-e4a9b1628c78)
 
 ---
 
@@ -76,7 +82,6 @@ Prompt2Query is a modern SaaS web application that empowers non-technical users 
 - **Frontend:** HTML5, CSS3, JavaScript, [Font Awesome](https://fontawesome.com/)
 - **AI/NL2SQL:** Gemini 1.5 Flash API (Google)
 - **Authentication:** Django Auth
-- **Deployment:** Works on any server supporting Django (Heroku, AWS, DigitalOcean, etc.)
 
 ---
 
@@ -84,7 +89,7 @@ Prompt2Query is a modern SaaS web application that empowers non-technical users 
 
 Suppose you have a **Student Management System** database with tables like `students`, `courses`, `attendance`, etc.
 
-- **Connect your database** (local or cloud PostgreSQL/MySQL/SQLite).
+- **Connect your database** (local or cloud PostgreSQL/MySQL).
 - **Ask:**  
   - "List all students enrolled in B.Com from Delhi"
   - "Show attendance for student ADM033"
@@ -93,7 +98,7 @@ Suppose you have a **Student Management System** database with tables like `stud
   - The exact SQL query and the results, instantly.
 
 **Related Project:**  
-- [Student Management System with NL2SQL (Demo & Source)](https://github.com/saikiranboga/student-management-nl2sql-demo)
+- [Student Management System with NL2SQL (Demo & Source)](https://github.com/shaikabdulgaffar/SMS-NL2SQL)
 
 ---
 
@@ -102,16 +107,13 @@ Suppose you have a **Student Management System** database with tables like `stud
 - [Font Awesome Icons](https://fontawesome.com/)
 - [Django Documentation](https://docs.djangoproject.com/)
 - [Google Gemini API](https://ai.google.dev/gemini-api/docs)
-- [Student Management NL2SQL Demo Repo](https://github.com/saikiranboga/student-management-nl2sql-demo)
-
 ---
 
 ## 🖥️ Local Setup
 
 1. **Clone the repo:**
    ```bash
-   git clone https://github.com/yourusername/prompt2query.git
-   cd prompt2query/saas_nl2sql
+   git clone https://github.com/shaikabdulgaffar/Prompt2Query.git
    ```
 
 2. **Install dependencies:**
@@ -156,16 +158,15 @@ Suppose you have a **Student Management System** database with tables like `stud
 ## 🚧 Project Status & Improvements
 
 > **Note:**  
-> Is project me abhi bhi kuch kamiya hain, jinhe resolve karne ke liye meri koshish jaari hai.  
-> Main is project ko ek SaaS product jaisa banaya hai, taki har user apna database securely connect karke, natural language me queries kar sake.  
-> Aapke feedback aur suggestions ka hamesha swagat hai!
+> I’ve built this project to function like a SaaS product, allowing each user to securely connect their own database and run queries using natural language.
+> I always welcome your feedback and suggestions!
 
 ---
 
 ## 📧 Contact & Contributions
 
 - For issues, suggestions, or contributions, please open an issue or pull request on this repo.
-- For business or demo requests, contact [your-email@example.com](mailto:your-email@example.com).
+- For business or demo requests, contact [shaikabdulgaffar01@gmail.com](mailto:shaikabdulgaffar01@gmail.com).
 
 ---
 
